@@ -11,16 +11,19 @@ import {
   ListItemText,
   Chip,
   Rating,
-  Divider 
+  Divider,
+  Button
 } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
+import ReviewDialog from '../components/ReviewDialog';
 
 const RecipeDetailsPage = () => {
   const { id } = useParams();
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [openReviewDialog, setOpenReviewDialog] = useState(false);
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -38,6 +41,14 @@ const RecipeDetailsPage = () => {
     fetchRecipe();
   }, [id]);
 
+  const handleOpenReviewDialog = () => setOpenReviewDialog(true);
+  const handleCloseReviewDialog = () => setOpenReviewDialog(false);
+
+  const handleSubmitReview = (updatedRecipe) => {
+    setRecipe(updatedRecipe);
+    handleCloseReviewDialog();
+  };
+
   if (loading || !recipe) {
     return <div>Loading recipe details...</div>;
   }
@@ -52,9 +63,13 @@ const RecipeDetailsPage = () => {
         
         {/* Rating and Metadata */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-          <Rating value={4} readOnly /> {/* Replace with actual rating */}
+          <Rating 
+            value={Number(recipe.averageRating)} 
+            precision={0.5} 
+            readOnly 
+          />
           <Typography variant="body2" color="text.secondary">
-            24 ratings
+            {recipe.reviewCount} {recipe.reviewCount === 1 ? 'rating' : 'ratings'}
           </Typography>
         </Box>
 
@@ -132,6 +147,59 @@ const RecipeDetailsPage = () => {
           ))}
         </List>
       </Paper>
+
+      {/* Reviews List */}
+      <Paper elevation={0} sx={{ mt: 4, p: 3, bgcolor: 'grey.50' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h4">
+            Reviews
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="primary"
+            onClick={handleOpenReviewDialog}
+          >
+            Add Review
+          </Button>
+        </Box>
+        
+        {recipe.reviews.length > 0 ? (
+          <List>
+            {recipe.reviews.map((review, index) => (
+              <React.Fragment key={index}>
+                <ListItem alignItems="flex-start">
+                  <Box sx={{ width: '100%' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                      <Typography variant="subtitle1">
+                        {review.user.name}
+                      </Typography>
+                      <Rating value={review.rating} readOnly size="small" />
+                      <Typography variant="body2" color="text.secondary">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                    {review.comment && (
+                      <Typography variant="body2" sx={{ mt: 1 }}>
+                        {review.comment}
+                      </Typography>
+                    )}
+                  </Box>
+                </ListItem>
+                {index < recipe.reviews.length - 1 && <Divider />}
+              </React.Fragment>
+            ))}
+          </List>
+        ) : (
+          <Typography>No reviews yet</Typography>
+        )}
+      </Paper>
+
+      <ReviewDialog
+        open={openReviewDialog}
+        onClose={handleCloseReviewDialog}
+        onSubmit={handleSubmitReview}
+        recipeId={id}
+      />
     </Container>
   );
 };

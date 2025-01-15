@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, Checkbox, FormControlLabel, Paper, Typography, Box } from '@mui/material';
+import ImageUpload from '../components/ImageUpload';
 
 const CreateRecipePage = () => {
   const [recipe, setRecipe] = useState({
@@ -73,6 +74,10 @@ const CreateRecipePage = () => {
     }
   };
 
+  const handleImageUpload = (imageUrl) => {
+    setRecipe({ ...recipe, image: imageUrl });
+  };
+
   return (
     <Paper sx={{ maxWidth: 800, margin: 'auto', p: 3, mt: 3 }}>
       <Typography variant="h4" gutterBottom>Create New Recipe</Typography>
@@ -98,14 +103,19 @@ const CreateRecipePage = () => {
           required
         />
 
-        <TextField
-          fullWidth
-          label="Image URL"
-          value={recipe.image}
-          onChange={(e) => setRecipe({ ...recipe, image: e.target.value })}
-          margin="normal"
-          required
-        />
+        <Box sx={{ mt: 3, mb: 2 }}>
+          <Typography variant="h6" gutterBottom>Recipe Image</Typography>
+          <ImageUpload onImageUpload={handleImageUpload} />
+          {recipe.image && (
+            <Box sx={{ mt: 2 }}>
+              <img 
+                src={recipe.image} 
+                alt="Recipe preview" 
+                style={{ maxWidth: '200px', borderRadius: '4px' }} 
+              />
+            </Box>
+          )}
+        </Box>
 
         <Typography variant="h6" sx={{ mt: 3 }}>Ingredients</Typography>
         {recipe.ingredients.map((ingredient, index) => (

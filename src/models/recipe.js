@@ -1,9 +1,16 @@
 const mongoose = require('mongoose');
 
+const reviewSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  comment: { type: String },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const recipeSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String, default: 'C://Users//crist//Downloads//miniserole.jpg' },
   ingredients: [{
     name: { type: String, required: true },
     amount: { type: String, required: true },
@@ -18,9 +25,22 @@ const recipeSchema = new mongoose.Schema({
     isGlutenFree: { type: Boolean, default: false }
   },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  servings: { type: Number, default: 2 }
+  servings: { type: Number, default: 2 },
+  reviews: [reviewSchema]
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+recipeSchema.virtual('averageRating').get(function() {
+  if (this.reviews.length === 0) return 0;
+  const sum = this.reviews.reduce((total, review) => total + review.rating, 0);
+  return (sum / this.reviews.length).toFixed(1);
+});
+
+recipeSchema.virtual('reviewCount').get(function() {
+  return this.reviews.length;
 });
 
 module.exports = mongoose.model('Recipe', recipeSchema); 

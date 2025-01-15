@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+    "cloudinary-react": "^1.8.1",
     "cors": "^2.8.5",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.4",
@@ -44,5 +45,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.5"
   }
 }

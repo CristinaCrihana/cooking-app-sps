@@ -1,9 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  DialogActions, 
+  Button, 
+  Rating, 
+  TextField, 
+  Typography,
+  Box 
+} from '@mui/material';
 import RecipeCard from '../components/RecipeCard';
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userReview, setUserReview] = useState({ rating: 0, comment: '' });
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -36,6 +49,7 @@ const HomePage = () => {
             title={recipe.title}
             image={recipe.image}
             description={recipe.description}
+            reviews={recipe.reviews}
           />
         ))}
       </div>

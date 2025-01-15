@@ -4,12 +4,10 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 
-// Generate JWT
 const generateToken = (id) => {
   return jwt.sign({ id }, 'your_jwt_secret', { expiresIn: '30d' });
 };
 
-// Sign Up
 router.post('/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -35,7 +33,6 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 

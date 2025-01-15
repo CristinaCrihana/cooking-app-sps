@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, Typography, CardMedia, Button } from '@mui/material';
+import { Card, CardContent, Typography, CardMedia, Button, Box } from '@mui/material';
 
 const RecipeCard = ({ id, title, image, description }) => {
   return (
@@ -11,11 +11,13 @@ const RecipeCard = ({ id, title, image, description }) => {
         <Typography variant="body2" color="text.secondary">
           {description}
         </Typography>
-        <Link to={`/recipe/${id}`} style={{ textDecoration: 'none' }}>
-          <Button variant="contained" style={{ marginTop: '1rem' }}>
-            View Details
-          </Button>
-        </Link>
+        <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+          <Link to={`/recipe/${id}`} style={{ textDecoration: 'none' }}>
+            <Button variant="contained">
+              View Details
+            </Button>
+          </Link>
+        </Box>
       </CardContent>
     </Card>
   );

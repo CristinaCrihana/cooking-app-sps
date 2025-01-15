@@ -4,17 +4,17 @@ const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState(''); // Only for sign-up
-  const [message, setMessage] = useState(''); // To display success or error messages
+  const [name, setName] = useState(''); 
+  const [message, setMessage] = useState(''); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Endpoint depending on login or signup
+
     const endpoint = isLogin ? '/api/users/login' : '/api/users/signup';
     const body = isLogin
-      ? { email, password } // For login
-      : { name, email, password }; // For sign-up
+      ? { email, password }
+      : { name, email, password }; 
 
     try {
       const response = await fetch(`http://localhost:5000${endpoint}`, {
@@ -26,8 +26,8 @@ const LoginPage = () => {
       const data = await response.json();
       if (response.ok) {
         setMessage(isLogin ? 'Login successful!' : 'Sign up successful!');
-        console.log(data); // For debugging
-        localStorage.setItem('token', data.token); // Save the token for future authenticated requests
+        console.log(data); 
+        localStorage.setItem('token', data.token); 
       } else {
         setMessage(data.message || 'Something went wrong.');
       }
