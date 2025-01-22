@@ -5,7 +5,7 @@ import RecipeDetailsPage from './pages/RecipeDetailsPage'; // Asigură-te că ac
 import LoginPage from './pages/LoginPage';
 import CreateRecipePage from './pages/CreateRecipePage';
 import SearchPage from './pages/SearchPage';
-
+import ProfilePage from './pages/ProfilePage';
 function App() {
   return (
     <Router>
@@ -15,6 +15,7 @@ function App() {
         <Route path="/recipe/:id" element={<RecipeDetailsPage />} /> {/* Ruta pentru detalii */}
         <Route path="/create-recipe" element={<CreateRecipePage />} />
         <Route path="/search" element={<SearchPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );
