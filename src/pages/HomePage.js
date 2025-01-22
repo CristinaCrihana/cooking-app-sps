@@ -1,22 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions, 
-  Button, 
-  Rating, 
-  TextField, 
+  Container,
   Typography,
-  Box 
+  Box
 } from '@mui/material';
 import RecipeCard from '../components/RecipeCard';
+import NavBar from '../components/NavBar';
 
 const HomePage = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [userReview, setUserReview] = useState({ rating: 0, comment: '' });
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -35,25 +28,42 @@ const HomePage = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading recipes...</div>;
+    return (
+      <>
+        <NavBar />
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+          <Typography>Loading recipes...</Typography>
+        </Box>
+      </>
+    );
   }
 
   return (
-    <div>
-      <h1>Recipe List</h1>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px', padding: '20px' }}>
-        {recipes.map((recipe) => (
-          <RecipeCard
-            key={recipe._id}
-            id={recipe._id}
-            title={recipe.title}
-            image={recipe.image}
-            description={recipe.description}
-            reviews={recipe.reviews}
-          />
-        ))}
-      </div>
-    </div>
+    <>
+      <NavBar />
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Typography variant="h3" component="h1" gutterBottom>
+          Recipe List
+        </Typography>
+        <Box sx={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
+          gap: '20px', 
+          mt: 4 
+        }}>
+          {recipes.map((recipe) => (
+            <RecipeCard
+              key={recipe._id}
+              id={recipe._id}
+              title={recipe.title}
+              image={recipe.image}
+              description={recipe.description}
+              reviews={recipe.reviews}
+            />
+          ))}
+        </Box>
+      </Container>
+    </>
   );
 };
 

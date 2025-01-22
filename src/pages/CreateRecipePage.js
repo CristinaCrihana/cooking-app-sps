@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Checkbox, FormControlLabel, Paper, Typography, Box } from '@mui/material';
+import { TextField, Button, Checkbox, FormControlLabel, Paper, Typography, Box, Container, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import ImageUpload from '../components/ImageUpload';
 
 const CreateRecipePage = () => {
@@ -9,6 +9,8 @@ const CreateRecipePage = () => {
     image: '',
     ingredients: [{ name: '', amount: '', unit: '' }],
     steps: [{ description: '' }],
+    cookingTime: '',
+    cuisine: '',
     dietaryInfo: {
       isVegetarian: false,
       isVegan: false,
@@ -79,7 +81,7 @@ const CreateRecipePage = () => {
   };
 
   return (
-    <Paper sx={{ maxWidth: 800, margin: 'auto', p: 3, mt: 3 }}>
+    <Container maxWidth="md" sx={{ py: 4 }}>
       <Typography variant="h4" gutterBottom>Create New Recipe</Typography>
       
       <form onSubmit={handleSubmit}>
@@ -116,6 +118,37 @@ const CreateRecipePage = () => {
             </Box>
           )}
         </Box>
+
+        <FormControl fullWidth sx={{ mb: 3 }}>
+          <InputLabel>Cooking Time</InputLabel>
+          <Select
+            value={recipe.cookingTime}
+            label="Cooking Time"
+            onChange={(e) => setRecipe({ ...recipe, cookingTime: e.target.value })}
+            required
+          >
+            <MenuItem value="< 30 mins">Less than 30 minutes</MenuItem>
+            <MenuItem value="30-60 mins">30-60 minutes</MenuItem>
+            <MenuItem value="> 60 mins">More than 60 minutes</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl fullWidth sx={{ mb: 3 }}>
+          <InputLabel>Cuisine</InputLabel>
+          <Select
+            value={recipe.cuisine}
+            label="Cuisine"
+            onChange={(e) => setRecipe({ ...recipe, cuisine: e.target.value })}
+            required
+          >
+            <MenuItem value="Italian">Italian</MenuItem>
+            <MenuItem value="Mexican">Mexican</MenuItem>
+            <MenuItem value="Indian">Indian</MenuItem>
+            <MenuItem value="Chinese">Chinese</MenuItem>
+            <MenuItem value="Japanese">Japanese</MenuItem>
+            <MenuItem value="Mediterranean">Mediterranean</MenuItem>
+          </Select>
+        </FormControl>
 
         <Typography variant="h6" sx={{ mt: 3 }}>Ingredients</Typography>
         {recipe.ingredients.map((ingredient, index) => (
@@ -207,7 +240,7 @@ const CreateRecipePage = () => {
           Create Recipe
         </Button>
       </form>
-    </Paper>
+    </Container>
   );
 };
 

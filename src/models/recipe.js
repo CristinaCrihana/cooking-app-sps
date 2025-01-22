@@ -19,6 +19,16 @@ const recipeSchema = new mongoose.Schema({
   steps: [{
     description: { type: String, required: true }
   }],
+  cookingTime: { 
+    type: String, 
+    required: true,
+    enum: ['< 30 mins', '30-60 mins', '> 60 mins']
+  },
+  cuisine: {
+    type: String,
+    required: true,
+    enum: ['Italian', 'Mexican', 'Indian', 'Chinese', 'Japanese', 'Mediterranean']
+  },
   dietaryInfo: {
     isVegetarian: { type: Boolean, default: false },
     isVegan: { type: Boolean, default: false },

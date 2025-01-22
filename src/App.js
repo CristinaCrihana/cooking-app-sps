@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage'; // Asigură-te că importul este corect
 import RecipeDetailsPage from './pages/RecipeDetailsPage'; // Asigură-te că acest fișier există
 import LoginPage from './pages/LoginPage';
 import CreateRecipePage from './pages/CreateRecipePage';
+import SearchPage from './pages/SearchPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} /> {/* Login/Sign Up Page */}
         <Route path="/recipe/:id" element={<RecipeDetailsPage />} /> {/* Ruta pentru detalii */}
         <Route path="/create-recipe" element={<CreateRecipePage />} />
+        <Route path="/search" element={<SearchPage />} />
       </Routes>
     </Router>
   );
