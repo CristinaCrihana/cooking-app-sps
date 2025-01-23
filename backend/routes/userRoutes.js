@@ -53,4 +53,26 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Get fridge items
+router.get('/fridge', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    res.json(user.fridgeItems);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching fridge items', error: error.message });
+  }
+});
+
+// Update fridge items
+router.put('/fridge', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    user.fridgeItems = req.body;
+    await user.save();
+    res.json(user.fridgeItems);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating fridge items', error: error.message });
+  }
+});
+
 module.exports = router;

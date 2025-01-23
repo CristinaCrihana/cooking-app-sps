@@ -4,16 +4,43 @@ import NavBar from '../components/NavBar';
 import MyFridge from '../components/fridge/MyFridge';
 
 const ProfilePage = () => {
-  const [fridgeItems, setFridgeItems] = useState(() => {
-    // Load fridge items from localStorage on initial render
-    const savedItems = localStorage.getItem('fridgeItems');
-    return savedItems ? JSON.parse(savedItems) : [];
-  });
+  const [fridgeItems, setFridgeItems] = useState([]);
 
-  // Save fridge items to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('fridgeItems', JSON.stringify(fridgeItems));
-  }, [fridgeItems]);
+    fetchFridgeItems();
+  }, []);
+
+  const fetchFridgeItems = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/users/fridge', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setFridgeItems(data);
+    } catch (error) {
+      console.error('Error fetching fridge items:', error);
+    }
+  };
+
+  const updateFridgeItems = async (newItems) => {
+    try {
+      const token = localStorage.getItem('token');
+      await fetch('http://localhost:5000/api/users/fridge', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(newItems)
+      });
+      setFridgeItems(newItems);
+    } catch (error) {
+      console.error('Error updating fridge items:', error);
+    }
+  };
 
   return (
     <>
@@ -25,7 +52,7 @@ const ProfilePage = () => {
           </Typography>
           <MyFridge 
             fridgeItems={fridgeItems} 
-            setFridgeItems={setFridgeItems} 
+            setFridgeItems={updateFridgeItems} 
           />
         </Box>
       </Container>

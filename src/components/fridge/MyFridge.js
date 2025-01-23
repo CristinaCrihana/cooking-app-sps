@@ -21,13 +21,15 @@ const MyFridge = ({ fridgeItems, setFridgeItems }) => {
 
   const handleAddItem = () => {
     if (newItem.name && newItem.quantity && newItem.unit) {
-      setFridgeItems([...fridgeItems, { ...newItem, id: Date.now() }]);
+      const updatedItems = [...fridgeItems, { ...newItem, id: Date.now() }];
+      setFridgeItems(updatedItems);
       setNewItem({ name: '', quantity: '', unit: '' });
     }
   };
 
   const handleDeleteItem = (id) => {
-    setFridgeItems(fridgeItems.filter(item => item.id !== id));
+    const updatedItems = fridgeItems.filter(item => item.id !== id);
+    setFridgeItems(updatedItems);
   };
 
   const handleEditItem = (item) => {
@@ -36,9 +38,10 @@ const MyFridge = ({ fridgeItems, setFridgeItems }) => {
   };
 
   const handleUpdateItem = () => {
-    setFridgeItems(fridgeItems.map(item => 
+    const updatedItems = fridgeItems.map(item => 
       item.id === editingItem.id ? { ...newItem, id: item.id } : item
-    ));
+    );
+    setFridgeItems(updatedItems);
     setNewItem({ name: '', quantity: '', unit: '' });
     setEditingItem(null);
   };
