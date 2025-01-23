@@ -1,8 +1,16 @@
 import React from 'react';
 import { AppBar, Toolbar, Button, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
+  const isLoggedIn = localStorage.getItem('token');
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -32,14 +40,32 @@ const NavBar = () => {
           </Button>
         </Box>
 
-        <Box>
-          <Button
-            component={Link}
-            to="/profile"
-            color="inherit"
-          >
-            My Profile
-          </Button>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          {isLoggedIn ? (
+            <>
+              <Button
+                component={Link}
+                to="/profile"
+                color="inherit"
+              >
+                My Profile
+              </Button>
+              <Button
+                color="inherit"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <Button
+              component={Link}
+              to="/login"
+              color="inherit"
+            >
+              Login
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
