@@ -8,10 +8,12 @@ import {
   MenuItem,
   Box,
   Typography,
-  Grid2
+  Grid2,
+  Button
 } from '@mui/material';
 import NavBar from '../components/NavBar';
 import RecipeCard from '../components/RecipeCard';
+import { canCookWithFridge } from '../utils/ingredientMatcher';
 
 const SearchPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,17 +21,21 @@ const SearchPage = () => {
     cookingTime: '',
     cuisine: '',
     diet: '',
+    fridgeFilter: false,
   });
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fridgeItems, setFridgeItems] = useState([]);
 
   // Sample filter options - you can modify these based on your needs
   const cookingTimes = ['< 30 mins', '30-60 mins', '> 60 mins'];
   const cuisines = ['Italian', 'Mexican', 'Indian', 'Chinese', 'Japanese', 'Mediterranean'];
   const diets = ['Vegetarian', 'Vegan', 'Gluten-Free', 'None'];
+  const ALWAYS_AVAILABLE = ['salt', 'pepper'];
 
   useEffect(() => {
     fetchRecipes();
+    fetchFridgeItems();
   }, []);
 
   const fetchRecipes = async () => {
@@ -44,11 +50,35 @@ const SearchPage = () => {
     }
   };
 
+  const fetchFridgeItems = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+      
+      const response = await fetch('http://localhost:5000/api/users/fridge', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setFridgeItems(data);
+    } catch (error) {
+      console.error('Error fetching fridge items:', error);
+    }
+  };
+
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleFridgeFilterToggle = () => {
+    setFilters(prev => ({
+      ...prev,
+      fridgeFilter: !prev.fridgeFilter
     }));
   };
 
@@ -67,7 +97,10 @@ const SearchPage = () => {
     const matchesCuisine = !filters.cuisine || 
       recipe.cuisine === filters.cuisine;
     
-    return matchesSearch && matchesDiet && matchesCookingTime && matchesCuisine;
+    const matchesFridge = !filters.fridgeFilter || 
+      canCookWithFridge(recipe.ingredients, fridgeItems);
+    
+    return matchesSearch && matchesDiet && matchesCookingTime && matchesCuisine && matchesFridge;
   });
 
   return (
@@ -137,6 +170,17 @@ const SearchPage = () => {
                 ))}
               </Select>
             </FormControl>
+          </Grid2>
+
+          <Grid2 item xs={12} md={2}>
+            <Button
+              fullWidth
+              variant={filters.fridgeFilter ? "contained" : "outlined"}
+              onClick={handleFridgeFilterToggle}
+              sx={{ height: '56px' }}
+            >
+              Cook from Fridge
+            </Button>
           </Grid2>
         </Grid2>
 
