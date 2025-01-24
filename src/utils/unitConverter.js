@@ -1,6 +1,5 @@
-// Conversion ratios for common cooking measurements
+
 const conversionRatios = {
-  // Volume conversions
   ml: {
     l: 0.001,
     cup: 0.00422675,
@@ -32,7 +31,6 @@ const conversionRatios = {
     tbsp: 0.333333
   },
   
-  // Weight conversions
   g: {
     kg: 0.001,
     oz: 0.035274,
@@ -55,9 +53,7 @@ const conversionRatios = {
   }
 };
 
-// Standard unit names mapping
 const unitAliases = {
-  // Volume
   milliliter: 'ml',
   milliliters: 'ml',
   'ml': 'ml',
@@ -73,7 +69,6 @@ const unitAliases = {
   teaspoons: 'tsp',
   'tsp': 'tsp',
   
-  // Weight
   gram: 'g',
   grams: 'g',
   'g': 'g',
@@ -90,32 +85,27 @@ const unitAliases = {
   // Count
   piece: 'piece',
   pieces: 'piece',
-  '': 'piece',  // Empty string defaults to piece
-  ' ': 'piece'  // Space string defaults to piece
+  '': 'piece', 
+  ' ': 'piece' 
 };
 
-// Standardize unit names
 export const standardizeUnit = (unit) => {
   const standardUnit = unitAliases[unit?.toLowerCase()?.trim()] || 'piece';
   return standardUnit;
 };
 
-// Convert between units
 export const convert = (value, fromUnit, toUnit) => {
   // Standardize units
   const standardFromUnit = standardizeUnit(fromUnit);
   const standardToUnit = standardizeUnit(toUnit);
 
-  // If units are the same, return original value
   if (standardFromUnit === standardToUnit) {
     return value;
   }
 
-  // Check if conversion is possible
   if (!conversionRatios[standardFromUnit] || !conversionRatios[standardFromUnit][standardToUnit]) {
     throw new Error(`Cannot convert from ${fromUnit} to ${toUnit}`);
   }
 
-  // Perform conversion
   return value * conversionRatios[standardFromUnit][standardToUnit];
 }; 

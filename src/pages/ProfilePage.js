@@ -3,12 +3,15 @@ import { Container, Typography, Box, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import MyFridge from '../components/fridge/MyFridge';
+import ShoppingList from '../components/ShoppingList';
 
 const ProfilePage = () => {
   const [fridgeItems, setFridgeItems] = useState([]);
+  const [likedRecipes, setLikedRecipes] = useState([]);
 
   useEffect(() => {
     fetchFridgeItems();
+    fetchLikedRecipes();
   }, []);
 
   const fetchFridgeItems = async () => {
@@ -23,6 +26,21 @@ const ProfilePage = () => {
       setFridgeItems(data);
     } catch (error) {
       console.error('Error fetching fridge items:', error);
+    }
+  };
+
+  const fetchLikedRecipes = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:5000/api/users/liked-recipes', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      setLikedRecipes(data);
+    } catch (error) {
+      console.error('Error fetching liked recipes:', error);
     }
   };
 
@@ -64,6 +82,10 @@ const ProfilePage = () => {
           <MyFridge 
             fridgeItems={fridgeItems} 
             setFridgeItems={updateFridgeItems} 
+          />
+          <ShoppingList 
+            fridgeItems={fridgeItems}
+            likedRecipes={likedRecipes}
           />
         </Box>
       </Container>
