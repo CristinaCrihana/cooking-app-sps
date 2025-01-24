@@ -18,7 +18,8 @@ const userSchema = new mongoose.Schema({
     favoriteRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
   },
   fridgeItems: [fridgeItemSchema],
-  createdRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
+  createdRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }],
+  likedRecipes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Recipe' }]
 }, {
   timestamps: true
 });

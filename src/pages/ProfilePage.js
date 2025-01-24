@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import MyFridge from '../components/fridge/MyFridge';
 
@@ -47,9 +48,19 @@ const ProfilePage = () => {
       <NavBar />
       <Container maxWidth="md">
         <Box sx={{ py: 4 }}>
-          <Typography variant="h4" gutterBottom>
-            My Profile
-          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography variant="h4" gutterBottom>
+              My Profile
+            </Typography>
+            <Button
+              component={Link}
+              to="/liked-recipes"
+              variant="contained"
+              color="primary"
+            >
+              View Liked Recipes
+            </Button>
+          </Box>
           <MyFridge 
             fridgeItems={fridgeItems} 
             setFridgeItems={updateFridgeItems} 

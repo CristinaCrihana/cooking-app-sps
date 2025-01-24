@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-
+const auth = require('../middleware/auth'); 
 const router = express.Router();
 
 const generateToken = (id) => {
@@ -72,6 +72,42 @@ router.put('/fridge', auth, async (req, res) => {
     res.json(user.fridgeItems);
   } catch (error) {
     res.status(500).json({ message: 'Error updating fridge items', error: error.message });
+  }
+});
+
+// Get liked recipes
+router.get('/liked-recipes', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).populate('likedRecipes');
+    res.json(user.likedRecipes);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching liked recipes', error: error.message });
+  }
+});
+
+// Add recipe to liked recipes
+router.post('/liked-recipes/:recipeId', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user.likedRecipes.includes(req.params.recipeId)) {
+      user.likedRecipes.push(req.params.recipeId);
+      await user.save();
+    }
+    res.json({ message: 'Recipe added to liked recipes' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding recipe to liked recipes', error: error.message });
+  }
+});
+
+// Remove recipe from liked recipes
+router.delete('/liked-recipes/:recipeId', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    user.likedRecipes = user.likedRecipes.filter(id => id.toString() !== req.params.recipeId);
+    await user.save();
+    res.json({ message: 'Recipe removed from liked recipes' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error removing recipe from liked recipes', error: error.message });
   }
 });
 
