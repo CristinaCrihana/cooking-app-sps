@@ -91,8 +91,11 @@ const SearchPage = () => {
       (filters.diet === 'Gluten-Free' && recipe.dietaryInfo?.isGlutenFree) ||
       filters.diet === 'None';
     
-    const matchesCookingTime = !filters.cookingTime || 
-      recipe.cookingTime === filters.cookingTime;
+    const matchesCookingTime = !filters.cookingTime || (
+      (filters.cookingTime === '< 30 mins' && recipe.cookingTime < 30) ||
+      (filters.cookingTime === '30-60 mins' && recipe.cookingTime >= 30 && recipe.cookingTime <= 60) ||
+      (filters.cookingTime === '> 60 mins' && recipe.cookingTime > 60)
+    );
     
     const matchesCuisine = !filters.cuisine || 
       recipe.cuisine === filters.cuisine;

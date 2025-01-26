@@ -18,6 +18,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import ReviewDialog from '../components/ReviewDialog';
+import NavBar from '../components/NavBar';
 
 const RecipeDetailsPage = () => {
   const { id } = useParams();
@@ -54,6 +55,8 @@ const RecipeDetailsPage = () => {
   }
 
   return (
+    <>
+    <NavBar />  
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Header Section */}
       <Box sx={{ mb: 4 }}>
@@ -73,19 +76,27 @@ const RecipeDetailsPage = () => {
           </Typography>
         </Box>
 
-        {/* Tags and Prep Time */}
-        <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        {/* Tags, Time, and Cuisine */}
+        <Box sx={{ display: 'flex', gap: 2, mb: 3, flexWrap: 'wrap' }}>
           {recipe.dietaryInfo?.isVegetarian && (
-            <Chip label="vegetarian" color="success" variant="outlined" />
+            <Chip label="Vegetarian" color="success" variant="outlined" />
+          )}
+          {recipe.dietaryInfo?.isVegan && (
+            <Chip label="Vegan" color="success" variant="outlined" />
           )}
           {recipe.dietaryInfo?.isGlutenFree && (
-            <Chip label="gluten-free" color="warning" variant="outlined" />
+            <Chip label="Gluten-Free" color="warning" variant="outlined" />
           )}
+          <Chip label={recipe.cuisine} color="primary" variant="outlined" />
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <AccessTimeIcon color="action" />
-            <Typography variant="body2">prep time: 30 min</Typography>
+            <Typography variant="body2">{recipe.cookingTime} minutes</Typography>
           </Box>
         </Box>
+
+        <Typography variant="body1" sx={{ mb: 3 }}>
+          {recipe.description}
+        </Typography>
       </Box>
 
       {/* Main Content Grid */}
@@ -108,8 +119,8 @@ const RecipeDetailsPage = () => {
           <Typography variant="h4" gutterBottom>
             Ingredients
           </Typography>
-          <Typography variant="subtitle1" gutterBottom>
-            {recipe.servings || 2} serves
+          <Typography variant="subtitle1" gutterBottom color="primary">
+            Serves {recipe.servings} people
           </Typography>
           <List>
             {recipe.ingredients.map((ingredient, index) => (
@@ -201,6 +212,7 @@ const RecipeDetailsPage = () => {
         recipeId={id}
       />
     </Container>
+    </>
   );
 };
 

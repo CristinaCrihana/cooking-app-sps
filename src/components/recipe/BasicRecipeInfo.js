@@ -42,19 +42,27 @@ const BasicRecipeInfo = ({ recipe, setRecipe }) => {
         )}
       </Box>
 
-      <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel>Cooking Time</InputLabel>
-        <Select
+      <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+        <TextField
+          type="number"
+          label="Cooking Time (minutes)"
           value={recipe.cookingTime}
-          label="Cooking Time"
-          onChange={(e) => setRecipe({ ...recipe, cookingTime: e.target.value })}
+          onChange={(e) => setRecipe({ ...recipe, cookingTime: parseInt(e.target.value) || '' })}
           required
-        >
-          <MenuItem value="< 30 mins">Less than 30 minutes</MenuItem>
-          <MenuItem value="30-60 mins">30-60 minutes</MenuItem>
-          <MenuItem value="> 60 mins">More than 60 minutes</MenuItem>
-        </Select>
-      </FormControl>
+          InputProps={{ inputProps: { min: 1 } }}
+          sx={{ flex: 1 }}
+        />
+
+        <TextField
+          type="number"
+          label="Number of Servings"
+          value={recipe.servings}
+          onChange={(e) => setRecipe({ ...recipe, servings: parseInt(e.target.value) || '' })}
+          required
+          InputProps={{ inputProps: { min: 1 } }}
+          sx={{ flex: 1 }}
+        />
+      </Box>
 
       <FormControl fullWidth sx={{ mb: 3 }}>
         <InputLabel>Cuisine</InputLabel>
@@ -70,6 +78,7 @@ const BasicRecipeInfo = ({ recipe, setRecipe }) => {
           <MenuItem value="Chinese">Chinese</MenuItem>
           <MenuItem value="Japanese">Japanese</MenuItem>
           <MenuItem value="Mediterranean">Mediterranean</MenuItem>
+          <MenuItem value="Other">Other</MenuItem>
         </Select>
       </FormControl>
     </>

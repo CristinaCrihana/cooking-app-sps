@@ -4,6 +4,7 @@ import BasicRecipeInfo from '../components/recipe/BasicRecipeInfo';
 import RecipeIngredients from '../components/recipe/RecipeIngredients';
 import RecipeSteps from '../components/recipe/RecipeSteps';
 import DietaryInfo from '../components/recipe/DietaryInfo';
+import NavBar from '../components/NavBar';
 
 const CreateRecipePage = () => {
   const [recipe, setRecipe] = useState({
@@ -13,6 +14,7 @@ const CreateRecipePage = () => {
     ingredients: [{ name: '', amount: '', unit: '' }],
     steps: [{ description: '' }],
     cookingTime: '',
+    servings: '',
     cuisine: '',
     dietaryInfo: {
       isVegetarian: false,
@@ -54,8 +56,10 @@ const CreateRecipePage = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Typography variant="h4" gutterBottom>Create New Recipe</Typography>
+    <>
+      <NavBar />
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom>Create New Recipe</Typography>
       
       <form onSubmit={handleSubmit}>
         <BasicRecipeInfo 
@@ -92,6 +96,7 @@ const CreateRecipePage = () => {
         </Button>
       </form>
     </Container>
+    </>
   );
 };
 

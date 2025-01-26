@@ -13,11 +13,13 @@ const recipeSchema = new mongoose.Schema({
   steps: [{
     description: { type: String, required: true }
   }],
+  servings: { type: Number, required: true, min: 1 },
   cookingTime: { 
-    type: String, 
+    type: Number,
     required: true,
-    enum: ['< 30 mins', '30-60 mins', '> 60 mins']
+    min: 1
   },
+  
   cuisine: {
     type: String,
     required: true,

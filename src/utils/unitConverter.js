@@ -95,7 +95,6 @@ export const standardizeUnit = (unit) => {
 };
 
 export const convert = (value, fromUnit, toUnit) => {
-  // Standardize units
   const standardFromUnit = standardizeUnit(fromUnit);
   const standardToUnit = standardizeUnit(toUnit);
 

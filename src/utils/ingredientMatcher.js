@@ -1,7 +1,6 @@
 import { convert, standardizeUnit } from './unitConverter';
 
 export const canCookWithFridge = (recipeIngredients, fridgeItems) => {
-  // Convert fridge items to a map for easier lookup
   const fridgeMap = new Map(
     fridgeItems.map(item => [
       item.name.toLowerCase(),
