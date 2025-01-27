@@ -125,7 +125,7 @@ const SearchPage = () => {
           </Grid2>
 
           <Grid2 item xs={12} md={2}>
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ minWidth: 200 }}>
               <InputLabel>Cooking Time</InputLabel>
               <Select
                 name="cookingTime"
@@ -142,7 +142,7 @@ const SearchPage = () => {
           </Grid2>
 
           <Grid2 item xs={12} md={2}>
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ minWidth: 200 }}>
               <InputLabel>Cuisine</InputLabel>
               <Select
                 name="cuisine"
@@ -159,7 +159,7 @@ const SearchPage = () => {
           </Grid2>
 
           <Grid2 item xs={12} md={2}>
-            <FormControl fullWidth>
+            <FormControl fullWidth sx={{ minWidth: 200 }}>
               <InputLabel>Diet</InputLabel>
               <Select
                 name="diet"
@@ -202,6 +202,8 @@ const SearchPage = () => {
                 title={recipe.title}
                 image={recipe.image}
                 description={recipe.description}
+                cookingTime={recipe.cookingTime}
+                servings={recipe.servings}
                 reviews={recipe.reviews}
               />
             ))}

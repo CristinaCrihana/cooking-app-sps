@@ -4,19 +4,22 @@ import path from 'path';
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
-  // Perform authentication steps. Replace these actions with your own.
+  // Go to login page
   await page.goto('http://localhost:3000/login');
-  await page.getByPlaceholder('Email').fill('meow@gmail.com');
-  await page.getByPlaceholder('Password').fill('meow');
-  await page.getByRole('button', { name: 'Log in' }).click();
-  // Wait until the page receives the cookies.
-  //
-  // Sometimes login flow sets cookies in the process of several redirects.
-  // Wait for the final URL to ensure that the cookies are actually set.
-  //await page.waitForURL('http://localhost:3000/login');
-  // Alternatively, you can wait until the page reaches a state where all cookies are set.
-  await expect(page.locator('p', { hasText: 'Login successful!' })).toBeVisible();
-  // End of authentication steps.
-
+  
+  // Ensure we're on the login form
+  await expect(page.getByText('Welcome Back')).toBeVisible();
+  
+  // Fill in login form
+  await page.getByLabel('Email Address').fill('meow@gmail.com');
+  await page.getByLabel('Password').fill('meow');
+  
+  // Click the login button and wait for navigation
+  await Promise.all([
+    page.waitForURL('http://localhost:3000'),  // Wait for navigation to home page
+    page.getByRole('button', { name: 'Log In' }).click()
+  ]);
+  
+  // Store authentication state
   await page.context().storageState({ path: authFile });
 });

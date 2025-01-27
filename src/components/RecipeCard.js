@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, Typography, CardMedia, Button, Box, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, CardMedia, Button, Box, IconButton, Rating } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import PeopleIcon from '@mui/icons-material/People';
 
-const RecipeCard = ({ id, title, image, description }) => {
+const RecipeCard = ({ id, title, image, description, cookingTime, servings, reviews }) => {
   const [isLiked, setIsLiked] = useState(false);
+
+  // Calculate average rating
+  const averageRating = reviews?.length 
+    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length)
+    : 0;
 
   useEffect(() => {
     checkIfLiked();
@@ -57,19 +64,55 @@ const RecipeCard = ({ id, title, image, description }) => {
       <CardContent>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <Typography variant="h5">{title}</Typography>
-          <IconButton onClick={handleLikeToggle} color="primary">
+          <IconButton onClick={handleLikeToggle} color="primary" data-testid="like-button" >
             {isLiked ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
           </IconButton>
         </Box>
-        <Typography variant="body2" color="text.secondary">
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{
+            mb: 2,
+            display: '-webkit-box',
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            height: '6em'
+          }}
+        >
           {description}
         </Typography>
-        <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+        
+        <Box sx={{ display: 'flex', gap: 2, mb: 2, alignItems: 'center' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <AccessTimeIcon sx={{ fontSize: 20, mr: 0.5 }} />
+            <Typography variant="body2">{cookingTime} min</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <PeopleIcon sx={{ fontSize: 20, mr: 0.5 }} />
+            <Typography variant="body2">{servings} servings</Typography>
+          </Box>
+        </Box>
+
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
           <Link to={`/recipe/${id}`} style={{ textDecoration: 'none' }}>
             <Button variant="contained">
               View Details
             </Button>
           </Link>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Rating 
+              value={averageRating} 
+              precision={0.5} 
+              readOnly 
+              size="small"
+            />
+            {reviews?.length > 0 && (
+              <Typography variant="body2" color="text.secondary" sx={{ ml: 1 }}>
+                ({reviews.length})
+              </Typography>
+            )}
+          </Box>
         </Box>
       </CardContent>
     </Card>

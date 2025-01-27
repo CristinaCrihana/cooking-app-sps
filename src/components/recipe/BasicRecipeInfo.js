@@ -67,6 +67,8 @@ const BasicRecipeInfo = ({ recipe, setRecipe }) => {
       <FormControl fullWidth sx={{ mb: 3 }}>
         <InputLabel>Cuisine</InputLabel>
         <Select
+        id="cuisine-select" // Add this explicit id
+        labelId="cuisine-label"
           value={recipe.cuisine}
           label="Cuisine"
           onChange={(e) => setRecipe({ ...recipe, cuisine: e.target.value })}

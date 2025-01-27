@@ -23,7 +23,7 @@ const recipeSchema = new mongoose.Schema({
   cuisine: {
     type: String,
     required: true,
-    enum: ['Italian', 'Mexican', 'Indian', 'Chinese', 'Japanese', 'Mediterranean']
+    enum: ['Italian', 'Mexican', 'Indian', 'Chinese', 'Japanese', 'Mediterranean', 'Other']
   },
   dietaryInfo: {
     isVegetarian: { type: Boolean, default: false },
