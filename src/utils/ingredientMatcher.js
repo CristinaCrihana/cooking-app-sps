@@ -8,11 +8,9 @@ export const canCookWithFridge = (recipeIngredients, fridgeItems) => {
     ])
   );
 
-  // Check each recipe ingredient
   return recipeIngredients.every(recipeIng => {
     const recipeName = recipeIng.name.toLowerCase();
     
-    // Skip checking for salt and pepper
     if (['salt', 'pepper'].includes(recipeName)) {
       return true;
     }

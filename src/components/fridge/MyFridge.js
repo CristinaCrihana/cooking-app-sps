@@ -29,16 +29,13 @@ const MyFridge = ({ fridgeItems, setFridgeItems }) => {
 
       if (existingItem) {
         try {
-          // Convert the new quantity to match the existing item's unit
           const convertedQuantity = convert(
             parseFloat(newItem.quantity),
             standardizeUnit(newItem.unit),
             standardizeUnit(existingItem.unit)
           );
-
-          // Update the existing item with the combined quantity
           const updatedItems = fridgeItems.map(item =>
-            item.id === existingItem.id
+            item.id === existingItem.id && item.name.toLowerCase() === newItem.name.toLowerCase()
               ? {
                   ...item,
                   quantity: (parseFloat(item.quantity) + convertedQuantity).toString()
@@ -49,12 +46,10 @@ const MyFridge = ({ fridgeItems, setFridgeItems }) => {
           await setFridgeItems(updatedItems);
           setNewItem({ name: '', quantity: '', unit: '' });
         } catch (error) {
-          // If conversion fails, show an error message
           console.error('Unit conversion error:', error);
           alert('Cannot combine items with incompatible units. Please use the same type of measurement (weight or volume).');
         }
       } else {
-        // Add new item if it doesn't exist
         const updatedItems = [...fridgeItems, { ...newItem, id: Date.now() }];
         await setFridgeItems(updatedItems);
         setNewItem({ name: '', quantity: '', unit: '' });

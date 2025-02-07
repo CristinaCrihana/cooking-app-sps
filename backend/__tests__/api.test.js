@@ -1,7 +1,7 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const app = require('../app'); // Your Express app
+const app = require('../app'); 
 const User = require('../models/user');
 const Recipe = require('../models/recipe');
 
