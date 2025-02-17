@@ -15,10 +15,13 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { convert, standardizeUnit } from '../../utils/unitConverter';
+import IngredientScanner from '../../components/IngredientScanner';
+import ReceiptScanner from '../ReceiptScanner';
 
 const MyFridge = ({ fridgeItems, setFridgeItems }) => {
   const [newItem, setNewItem] = useState({ name: '', quantity: '', unit: '' });
   const [editingItem, setEditingItem] = useState(null);
+
 
   const handleAddItem = async () => {
     if (newItem.name && newItem.quantity && newItem.unit) {
@@ -76,12 +79,26 @@ const MyFridge = ({ fridgeItems, setFridgeItems }) => {
     setEditingItem(null);
   };
 
+  const handleIngredientsDetected = (detectedIngredients) => {
+    const newItems = detectedIngredients.map(ingredient => ({
+      id: Date.now() + Math.random(),
+      name: ingredient.name,
+      quantity: ingredient.quantity || '1',
+      unit: ingredient.unit || 'piece'
+    }));
+
+    setFridgeItems([...fridgeItems, ...newItems]);
+  };
+
   return (
     <Paper elevation={3} sx={{ p: 3, mt: 3 }}>
       <Typography variant="h6" gutterBottom>
         My Fridge
       </Typography>
 
+      <IngredientScanner onIngredientsDetected={handleIngredientsDetected} />
+      
+      <ReceiptScanner onIngredientsDetected={handleIngredientsDetected} />
       <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
         <TextField
           label="Ingredient"

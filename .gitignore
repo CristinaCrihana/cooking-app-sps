@@ -5,3 +5,4 @@ build
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+backend/utils/serviceAccount.json
