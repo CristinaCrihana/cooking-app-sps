@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Typography, Container } from '@mui/material';
 import BasicRecipeInfo from '../components/recipe/BasicRecipeInfo';
 import RecipeIngredients from '../components/recipe/RecipeIngredients';
@@ -7,6 +8,8 @@ import DietaryInfo from '../components/recipe/DietaryInfo';
 import NavBar from '../components/NavBar';
 
 const CreateRecipePage = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [recipe, setRecipe] = useState({
     title: '',
     description: '',
@@ -23,16 +26,34 @@ const CreateRecipePage = () => {
     }
   });
 
+  useEffect(() => {
+    if (id) {
+      fetchRecipe();
+    }
+  }, [id]);
+
+  const fetchRecipe = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/recipes/${id}`);
+      const data = await response.json();
+      setRecipe(data);
+    } catch (error) {
+      console.error('Error fetching recipe:', error);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('Sending recipe data:', recipe);
-
       const token = localStorage.getItem('token');
-      console.log('Token:', token);
-
-      const response = await fetch('http://localhost:5000/api/recipes', {
-        method: 'POST',
+      const url = id 
+        ? `http://localhost:5000/api/recipes/${id}`
+        : 'http://localhost:5000/api/recipes';
+      
+      const method = id ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -42,16 +63,15 @@ const CreateRecipePage = () => {
       
       if (!response.ok) {
         const errorData = await response.json();
-        console.log('Error response:', errorData);
-        alert(`Failed to create recipe: ${errorData.message}`);
+        alert(`Failed to ${id ? 'update' : 'create'} recipe: ${errorData.message}`);
         return;
       }
-
-      const data = await response.json();
-      alert('Recipe created successfully!');
+  
+      alert(`Recipe ${id ? 'updated' : 'created'} successfully!`);
+      navigate('/my-recipes');
     } catch (error) {
-      console.error('Error creating recipe:', error);
-      alert('Error creating recipe');
+      console.error(`Error ${id ? 'updating' : 'creating'} recipe:`, error);
+      alert(`Error ${id ? 'updating' : 'creating'} recipe`);
     }
   };
 

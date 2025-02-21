@@ -10,6 +10,7 @@ import CreateRecipePage from './pages/CreateRecipePage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
 import LikedRecipesPage from './pages/LikedRecipesPage';
+import MyRecipesPage from './pages/MyRecipesPage';
 
 function App() {
   return (
@@ -21,9 +22,11 @@ function App() {
           <Route path="/login" element={<LoginPage />} /> {/* Login/Sign Up Page */}
           <Route path="/recipe/:id" element={<RecipeDetailsPage />} /> {/* Ruta pentru detalii */}
           <Route path="/create-recipe" element={<CreateRecipePage />} />
+          <Route path="/create-recipe/:id" element={<CreateRecipePage />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/liked-recipes" element={<LikedRecipesPage />} />
+          <Route path="/my-recipes" element={<MyRecipesPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

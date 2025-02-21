@@ -110,5 +110,12 @@ router.delete('/liked-recipes/:recipeId', auth, async (req, res) => {
     res.status(500).json({ message: 'Error removing recipe from liked recipes', error: error.message });
   }
 });
-
+router.get('/username', auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    res.json({ username: user.name });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching username', error: error.message });
+  }
+});
 module.exports = router;

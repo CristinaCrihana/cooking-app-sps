@@ -51,6 +51,13 @@ const NavBar = () => {
                 My Profile
               </Button>
               <Button
+                component={Link}
+                to="/my-recipes"
+                color="inherit"
+              >
+                My Recipes
+              </Button>
+              <Button
                 color="inherit"
                 onClick={handleLogout}
               >

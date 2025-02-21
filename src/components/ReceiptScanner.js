@@ -44,11 +44,7 @@ const ReceiptScanner = ({ onIngredientsDetected }) => {
   };
 
   const formatIngredient = (item) => {
-    if (item.unit === 'kg') {
-      return `${item.name} - ${item.quantity} ${item.unit}`;
-    } else {
-      return `${item.name} - 1 piece`;
-    }
+    return `${item.name} - ${item.quantity} ${item.unit}`;
   };
 
   return (

@@ -8,10 +8,11 @@ import ShoppingList from '../components/ShoppingList';
 const ProfilePage = () => {
   const [fridgeItems, setFridgeItems] = useState([]);
   const [likedRecipes, setLikedRecipes] = useState([]);
-
+  const [userName, setUserName] = useState('');
   useEffect(() => {
     fetchFridgeItems();
     fetchLikedRecipes();
+    fetchUserName();
   }, []);
 
   const fetchFridgeItems = async () => {
@@ -43,6 +44,16 @@ const ProfilePage = () => {
       console.error('Error fetching liked recipes:', error);
     }
   };
+  const fetchUserName = async () => {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:5000/api/users/username', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+    setUserName(data.username);
+  };
 
   const updateFridgeItems = async (newItems) => {
     try {
@@ -68,7 +79,7 @@ const ProfilePage = () => {
         <Box sx={{ py: 4 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
             <Typography variant="h4" gutterBottom>
-              My Profile
+              Hello {userName}
             </Typography>
             <Button
               component={Link}
