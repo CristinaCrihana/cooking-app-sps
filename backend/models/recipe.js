@@ -1,15 +1,28 @@
 const mongoose = require('mongoose');
 const reviewSchema = require('./review');
 
+const nutritionSchema = new mongoose.Schema({
+  calories: { type: Number },
+  protein: { type: Number },
+  carbohydrates: { type: Number },
+  fat: { type: Number },
+  fiber: { type: Number },
+  sugar: { type: Number }
+});
+
+const ingredientSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  amount: { type: String, required: true },
+  unit: { type: String, required: true },
+  fdcId: { type: String },  // USDA Food Data Central ID
+  nutritionPer100g: nutritionSchema
+});
+
 const recipeSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   image: { type: String, default: 'C://Users//crist//Downloads//miniserole.jpg' },
-  ingredients: [{
-    name: { type: String, required: true },
-    amount: { type: String, required: true },
-    unit: { type: String, required: true }
-  }],
+  ingredients: [ingredientSchema],
   steps: [{
     description: { type: String, required: true }
   }],
@@ -32,7 +45,8 @@ const recipeSchema = new mongoose.Schema({
   },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   servings: { type: Number, default: 2 },
-  reviews: [reviewSchema]
+  reviews: [reviewSchema],
+  totalNutrition: nutritionSchema
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

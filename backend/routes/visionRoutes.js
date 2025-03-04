@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const vision = require('@google-cloud/vision');
+const language = require('@google-cloud/language');
 const config = require('../utils/googleCloud');
 
 const visionClient = new vision.ImageAnnotatorClient(config);
+const languageClient = new language.LanguageServiceClient(config);
 
 // Food categories to filter out non-food items
 const foodCategories = {
   dairy: ['milk', 'cheese', 'yogurt', 'cream', 'butter'],
   meat: ['chicken', 'beef', 'pork', 'fish', 'salmon', 'tuna'],
-  produce: ['apple', 'banana', 'tomato', 'lettuce', 'carrot', 'potato', 'lime', 'pepper'],
+  produce: ['apple', 'banana', 'tomato', 'lettuce', 'carrot','zuchinni','peas','broccoli', 'potato', 'lime', 'pepper'],
   grains: ['bread', 'rice', 'pasta', 'cereal', 'flour'],
 };
 
@@ -40,6 +42,36 @@ function isValidFoodItem(name) {
   return Object.values(foodCategories).some(category =>
     category.some(term => name.toLowerCase().includes(term))
   );
+}
+
+// Add this new function for NLP processing
+async function processWithNLP(text) {
+  try {
+    const document = {
+      content: text,
+      type: 'PLAIN_TEXT',
+    };
+
+    // Analyze entities in the text
+    const [result] = await languageClient.analyzeEntities({ document });
+    const entities = result.entities;
+
+    const foodEntities = entities.filter(entity => 
+      entity.type === 'CONSUMER_GOOD' || 
+      entity.type === 'FOOD' ||
+      entity.type === 'OTHER' 
+    );
+
+    if (foodEntities.length > 0) {
+      console.log("foodEntities: ", foodEntities);
+      const mostRelevant = foodEntities.sort((a, b) => b.salience - a.salience)[0];
+      return mostRelevant.name;
+    }
+    return text;
+  } catch (error) {
+    console.error('NLP Processing Error:', error);
+    return text; 
+  }
 }
 
 router.post('/analyze-receipt', async (req, res) => {
@@ -80,7 +112,9 @@ router.post('/analyze-receipt', async (req, res) => {
         if (lineQuantityMatch || lineWeightMatch) {
           // Extract name by removing the quantity part
           const quantityPart = lineQuantityMatch?.[0] || lineWeightMatch?.[0];
-          currentItem.name = normalizeIngredientName(line.replace(quantityPart, ''));
+          const rawName = line.replace(quantityPart, '');
+          // Process with NLP
+          currentItem.name = normalizeIngredientName(await processWithNLP(rawName));
           
           if (lineQuantityMatch) {
             currentItem.quantity = lineQuantityMatch[1];
@@ -91,7 +125,7 @@ router.post('/analyze-receipt', async (req, res) => {
           }
         } else {
           // Check adjacent lines if no quantity in current line
-          currentItem.name = normalizeIngredientName(line);
+          currentItem.name = normalizeIngredientName(await processWithNLP(line));
           
           // Look ahead up to 2 lines for quantity
           for (let j = 1; j <= 2; j++) {
