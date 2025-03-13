@@ -23,11 +23,14 @@ const RecipeIngredients = ({ ingredients, setRecipe, recipe }) => {
     
     if (field === 'fullData') {
       // Handle selection from autocomplete
+      console.log('Selected ingredient full data:', value);
+      
       newIngredients[index] = {
         ...newIngredients[index],
         name: value.name,
         fdcId: value.fdcId,
-        nutritionPer100g: value.nutritionPer100g
+        nutritionPer100g: value.nutritionPer100g,
+        foodMeasures: value.foodMeasures
       };
     } else {
       // Handle manual input changes
@@ -97,6 +100,7 @@ const RecipeIngredients = ({ ingredients, setRecipe, recipe }) => {
     const timeoutId = setTimeout(async () => {
       try {
         const results = await searchIngredients(searchText);
+        console.log('USDA API Raw Response:', JSON.stringify(results, null, 2));
         console.log('Search results:', results);
         setOptions(results);
       } catch (error) {
@@ -118,7 +122,8 @@ const RecipeIngredients = ({ ingredients, setRecipe, recipe }) => {
         amount: '', 
         unit: '',
         fdcId: '',
-        nutritionPer100g: null
+        nutritionPer100g: null,
+        foodMeasures: []
       }]
     });
   };

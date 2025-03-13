@@ -15,7 +15,12 @@ const ingredientSchema = new mongoose.Schema({
   amount: { type: String, required: true },
   unit: { type: String, required: true },
   fdcId: { type: String },  // USDA Food Data Central ID
-  nutritionPer100g: nutritionSchema
+  nutritionPer100g: nutritionSchema,
+  foodMeasures: [{
+    //measureUnit: String,
+    gramWeight: Number,
+    disseminationText: String
+  }]
 });
 
 const recipeSchema = new mongoose.Schema({

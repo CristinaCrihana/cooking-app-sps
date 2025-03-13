@@ -9,6 +9,12 @@ const processUsdaResults = (data, query) => {
     const fiber = food.foodNutrients.find(n => n.nutrientName === 'Fiber, total dietary')?.value || 0;
     const sugar = food.foodNutrients.find(n => n.nutrientName === 'Total Sugars')?.value || 0;
 
+    // Extract food measures (serving sizes)
+    const foodMeasures = food.foodMeasures?.map(portion => ({
+      disseminationText: portion.disseminationText,  // Changed from measureUnit to match schema
+      gramWeight: portion.gramWeight // weight in grams
+    })) || [];
+
     // Store the original description to help with filtering
     const originalDescription = food.description.toLowerCase();
     
@@ -30,6 +36,7 @@ const processUsdaResults = (data, query) => {
       fdcId: food.fdcId,
       originalName: originalDescription,
       name: cleanedName,
+      dataType: food.dataType, // Add this to help with scoring
       attributes: {
         isProcessed,
         isFortified,
@@ -43,7 +50,8 @@ const processUsdaResults = (data, query) => {
         fat,
         fiber,
         sugar
-      }
+      },
+      foodMeasures
     };
   });
   
@@ -69,12 +77,17 @@ const processUsdaResults = (data, query) => {
   const scoreFood = (food) => {
     let score = 0;
     
-    // Exact query match gets highest score
+    // Prioritize Survey (FNDDS) data
+    if (food.dataType === 'Survey (FNDDS)') {
+      score += 200; // Give significant boost to Survey data
+    }
+    
+    // Exact query match gets high score
     if (food.name.toLowerCase() === query.toLowerCase()) {
       score += 100;
     }
     
-    // Penalize processed forms (dried, powdered, etc.)
+    // Penalize processed forms
     if (food.attributes.isProcessed) {
       score -= 50;
     }
@@ -84,7 +97,7 @@ const processUsdaResults = (data, query) => {
       score -= 10;
     }
     
-    // Prefer basic items (fat variations get mild preference)
+    // Prefer basic items
     if (food.attributes.isFat && !food.attributes.isProcessed) {
       score += 5;
     }
@@ -170,6 +183,7 @@ const processUsdaResults = (data, query) => {
     name: food.name,
     fdcId: food.fdcId,
     nutritionPer100g: food.nutritionPer100g,
+    foodMeasures: food.foodMeasures,
     // Include original name only if significantly different from displayed name
     ...(food.name !== food.originalName && {originalDescription: food.originalName})
   }));
